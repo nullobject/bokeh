@@ -3,6 +3,9 @@
   "description": "A scalable background processing server.",
   "version": "0.1.0",
   "main": "./lib/index.js",
+  "directories": {
+    "lib": "./lib"
+  },
   "engines": {
     "node": "~0.6.8"
   },
