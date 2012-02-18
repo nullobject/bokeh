@@ -19,16 +19,12 @@ module.exports = class Worker
   _message: (payload) =>
     {id, request, data} = JSON.parse payload
 
-    task = new @tasks[request]
+    task = new @tasks[request] this
 
-    try
-      console.log "Task started: %s", id
+    console.log "Task started: %s", id
 
-      task.wrappedRun data, (error, data) =>
-        response = if error? then "failed" else "completed"
-        console.log "Task %s: %s", response, id
-        payload = JSON.stringify id: id, response: response, data: data
-        @socket.send payload
-    catch error
-      payload = JSON.stringify id: id, response: "failed", data: error.toString()
+    task.wrappedRun data, (error, data) =>
+      response = if error? then "failed" else "completed"
+      console.log "Task %s: %s", response, id
+      payload = JSON.stringify id: id, response: response, data: data
       @socket.send payload

@@ -6,28 +6,28 @@ module.exports = class Riak
 
   write: (key, data, callback) ->
     @client.save @options.bucket, key, data, (error) ->
-      if not error?
-        callback null, this
-      else
+      if error?
         callback error
+      else
+        callback null, this
 
   read: (key, callback) ->
     @client.get @options.bucket, key, (error, data) ->
-      if not error?
-        callback null, data
-      else
+      if error?
         callback error
+      else
+        callback null, data
 
   keys: (callback) ->
     @client.keys @options.bucket, (error, data) ->
-      if not error?
-        callback null, data
-      else
+      if error?
         callback error
+      else
+        callback null, data
 
   delete: (key, callback) ->
     @client.remove @options.bucket, key, (error) ->
-      if not error?
-        callback null
-      else
+      if error?
         callback error
+      else
+        callback null
