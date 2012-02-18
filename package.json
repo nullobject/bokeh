@@ -1,0 +1,25 @@
+{
+  "name": "bokeh",
+  "description": "A scalable background processing server.",
+  "version": "0.1.0",
+  "main": "./lib/index.js",
+  "engines": {
+    "node": "~0.6.8"
+  },
+  "dependencies": {
+    "node-uuid": "~1.3.0",
+    "riak-js": "~0.4.0",
+    "zmq": "~2.0.0"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.2.0",
+    "should": "~0.5.0"
+  },
+  "optionalDependencies": {},
+  "author": "Josh Bassett <josh.bassett@gmail.com>",
+  "homepage": "https://github.com/gamedo/bokeh",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gamedo/bokeh.git"
+  }
+}
