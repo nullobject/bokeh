@@ -15,7 +15,7 @@ module.exports = class Client
   # Submits a task with the given name and data.
   #
   # Returns a handle to the task.
-  submit: (name, data, callback) ->
+  submitTask: (name, data, callback) ->
     handle = new Handle name, data, callback
     @_addHandle handle
     payload = JSON.stringify id: handle.id, request: name, data: data
