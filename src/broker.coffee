@@ -1,5 +1,6 @@
-zmq  = require "zmq"
-Riak = require "./store/riak"
+async = require "async"
+zmq   = require "zmq"
+Riak  = require "./store/riak"
 
 # A broker passes reqests/responses between clients/workers.
 module.exports = class Broker
@@ -45,10 +46,14 @@ module.exports = class Broker
       @router.send [envelopes, payload]
 
   _submitTasks: ->
-    @store.readAll (error, tasks) =>
+    @store.keys (error, ids) =>
       throw error if error?
-      @_submitTask task for task in tasks
+      async.forEachSeries ids, @_submitTask, ->
+        console.log "Pending tasks flushed"
 
-  _submitTask: (task) ->
-    payload = JSON.stringify id: task.id, request: task.request, data: task.data
-    @dealer.send [new Buffer(""), payload]
+  _submitTask: (id, callback) =>
+    @store.read id, (error, task) =>
+      throw error if error?
+      payload = JSON.stringify id: task.id, request: task.request, data: task.data
+      @dealer.send [new Buffer(""), payload]
+      callback()

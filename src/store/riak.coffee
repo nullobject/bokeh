@@ -18,10 +18,10 @@ module.exports = class Riak
       else
         callback error
 
-  readAll: (callback) ->
-    @client.getAll @options.bucket, (error, data) ->
+  keys: (callback) ->
+    @client.keys @options.bucket, (error, data) ->
       if not error?
-        callback null, data.map (object) -> object.data
+        callback null, data
       else
         callback error
 
