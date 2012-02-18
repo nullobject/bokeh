@@ -24,7 +24,11 @@ module.exports = class Worker
     console.log "Task started: %s", id
 
     task.wrappedRun data, (error, data) =>
-      response = if error? then "failed" else "completed"
-      console.log "Task %s: %s", response, id
+      response = if error?
+        console.log "Task failed: %s (%s)", id, error
+        "failed"
+      else
+        console.log "Task completed: %s (%s)", id, data
+        "completed"
       payload = JSON.stringify id: id, response: response, data: data
       @socket.send payload

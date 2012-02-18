@@ -5,4 +5,4 @@ module.exports = class Task
     try
       @run data, callback
     catch error
-      callback error
+      callback error.toString()
