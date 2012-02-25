@@ -48,12 +48,15 @@ module.exports = class Broker
   _submitTasks: ->
     @store.keys (error, ids) =>
       throw error if error?
-      async.forEachSeries ids, @_submitTask, ->
+      async.forEachSeries ids, @_submitTask, (error) ->
+        throw error if error?
         console.log "Pending tasks flushed"
 
   _submitTask: (id, callback) =>
     @store.read id, (error, task) =>
-      throw error if error?
-      payload = JSON.stringify id: task.id, request: task.request, data: task.data
-      @dealer.send [new Buffer(""), payload]
-      callback()
+      if error?
+        callback error
+      else
+        payload = JSON.stringify id: task.id, request: task.request, data: task.data
+        @dealer.send [new Buffer(""), payload]
+        callback null
