@@ -50,6 +50,7 @@ module.exports = class Client
   _completed: (handle, data) ->
     console.log "Task completed: %s", handle.id
     @_removeHandle handle
+    handle.emit "complete", data
 
   _failed: (handle, data) ->
     console.log "Task failed: %s", handle.id
@@ -57,6 +58,7 @@ module.exports = class Client
       handle.callback data
       handle.callback = undefined
     @_removeHandle handle
+    handle.emit "error", data
 
   _addHandle: (handle) ->
     @handles[handle.id] = handle
