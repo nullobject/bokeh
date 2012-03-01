@@ -20,6 +20,7 @@ module.exports = class Client
     @_addHandle handle
     payload = JSON.stringify id: handle.id, request: name, data: data
     @socket.send [new Buffer(""), payload]
+    handle
 
   _connect: ->
     @socket = zmq.socket "dealer"
