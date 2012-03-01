@@ -28,7 +28,7 @@ module.exports = class Worker
         console.log "Task failed: %s (%s)", id, error
         "failed"
       else
-        console.log "Task completed: %s (%s)", id, data
+        console.log "Task completed: %s", id
         "completed"
       payload = JSON.stringify id: id, response: response, data: data
       @socket.send payload
