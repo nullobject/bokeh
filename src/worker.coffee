@@ -1,11 +1,14 @@
-zmq  = require "zmq"
-Task = require "./task"
+_   = require "underscore"
+zmq = require "zmq"
 
 # A worker processes tasks.
 module.exports = class Worker
   constructor: (@options) ->
     @tasks = {}
     @_connect()
+
+  close: ->
+    @socket.close()
 
   registerTask: (name, klass) ->
     @tasks[name] = klass
@@ -23,7 +26,7 @@ module.exports = class Worker
 
     console.log "Task started: %s", id
 
-    task.wrappedRun data, (error, data) =>
+    @_runTask task, data, (error, data) =>
       response = if error?
         console.log "Task failed: %s (%s)", id, error
         "failed"
@@ -32,3 +35,9 @@ module.exports = class Worker
         "completed"
       payload = JSON.stringify id: id, response: response, data: data
       @socket.send payload
+
+  _runTask: (task, data, callback) ->
+    try
+      task.run data, callback
+    catch error
+      callback error.toString()
