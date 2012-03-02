@@ -44,3 +44,7 @@ Install with npm:
     bokeh = require "bokeh"
     worker = new bokeh.Worker
     worker.registerTask "Sleeper", require("./tasks/sleeper")
+
+## Running the tests
+
+    cake test
