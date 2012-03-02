@@ -7,9 +7,11 @@ module.exports = class Worker
     @tasks = {}
     @_connect()
 
+  # Closes the connection to the broker.
   close: ->
     @socket.close()
 
+  # Registers a task with the given name and class.
   registerTask: (name, klass) ->
     @tasks[name] = klass
 

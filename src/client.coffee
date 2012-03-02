@@ -1,3 +1,4 @@
+_            = require "underscore"
 uuid         = require "node-uuid"
 zmq          = require "zmq"
 EventEmitter = require("events").EventEmitter
@@ -11,6 +12,10 @@ module.exports = class Client
   constructor: (@options) ->
     @handles = {}
     @_connect()
+
+  # Closes the connection to the broker.
+  close: ->
+    @socket.close()
 
   # Submits a task with the given name and data.
   #
@@ -47,19 +52,22 @@ module.exports = class Client
     if handle.callback?
       handle.callback null, handle
       handle.callback = undefined
+    handle.emit "submit"
 
   _completed: (handle, data) ->
     console.log "Task completed: %s", handle.id
-    @_removeHandle handle
     handle.emit "complete", data
+    @_removeHandle handle
 
   _failed: (handle, data) ->
     console.log "Task failed: %s", handle.id
     if handle.callback?
-      handle.callback data
+      handle.callback data, handle
       handle.callback = undefined
+      handle.emit "error", data unless _(handle.listeners("error")).isEmpty()
+    else
+      handle.emit "error", data
     @_removeHandle handle
-    handle.emit "error", data
 
   _addHandle: (handle) ->
     @handles[handle.id] = handle
