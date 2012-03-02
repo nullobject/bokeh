@@ -1,13 +1,13 @@
 {
   "name": "bokeh",
   "description": "A scalable background processing server.",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "main": "./lib/index.js",
   "directories": {
     "lib": "./lib"
   },
   "engines": {
-    "node": "~0.6.8"
+    "node": "~0.6.0"
   },
   "dependencies": {
     "async": "~0.1.0",
