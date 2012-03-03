@@ -64,9 +64,7 @@ module.exports = class Client
     if handle.callback?
       handle.callback data, handle
       handle.callback = undefined
-      handle.emit "error", data unless _(handle.listeners("error")).isEmpty()
-    else
-      handle.emit "error", data
+    handle.emit "error", data unless _(handle.listeners("error")).isEmpty()
     @_removeHandle handle
 
   _addHandle: (handle) ->
