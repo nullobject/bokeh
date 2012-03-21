@@ -18,8 +18,7 @@ Install with npm:
 
 ### Task
 
-    bokeh = require "bokeh"
-    class Sleeper extends bokeh.Task
+    class Sleeper
       run: (data, callback) ->
         setTimeout callback, data.timeout
 
