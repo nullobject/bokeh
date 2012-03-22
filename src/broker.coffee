@@ -5,48 +5,55 @@ Riak  = require "./store/riak"
 # A broker passes reqests/responses between clients/workers.
 module.exports = class Broker
   constructor: (@options) ->
-    @store  = new Riak @options.store.options
+    @store = new Riak @options.store.options
+
     @router = zmq.socket "router"
     @dealer = zmq.socket "dealer"
+
     @queue = async.queue (task, callback) =>
       @store.write task.id, task, callback
-    , 8
+    , @options.store.maxConnections or 8
 
     @_bindRouter()
     @_bindDealer()
     @_submitTasks()
 
   _bindRouter: ->
-    @router.on "message", @_routerMessage
+    @router.on "message", @_routerRx
 
     @router.bind @options.router.endpoint, =>
       console.log "Router listening on %s", @options.router.endpoint
 
   _bindDealer: ->
-    @dealer.on "message", @_dealerMessage
+    @dealer.on "message", @_dealerRx
 
     @dealer.bind @options.dealer.endpoint, =>
       console.log "Dealer listening on %s", @options.dealer.endpoint
 
-  _routerMessage: (envelopes..., payload) =>
+  _routerRx: (envelopes..., payload) =>
     task = JSON.parse payload
 
     @queue.push task, (error) =>
-      if not error?
-        @dealer.send [envelopes, payload]
-
-        # Tell the client we've submitted the task.
-        payload = JSON.stringify id: task.id, response: "submitted"
-        @router.send [envelopes, payload]
+      if error?
+        @_routerTx envelopes, id: task.id, response: "failed", data: error.toString()
       else
-        # Tell the client shit blew up.
-        payload = JSON.stringify id: task.id, response: "failed", data: error.toString()
-        @router.send [envelopes, payload]
+        @_dealerTx envelopes, payload
+        @_routerTx envelopes, id: task.id, response: "submitted"
 
-  _dealerMessage: (envelopes..., payload) =>
+  _dealerRx: (envelopes..., payload) =>
     task = JSON.parse payload
     @store.delete task.id, (error) =>
-      @router.send [envelopes, payload]
+      @_routerTx envelopes, payload
+
+  _routerTx: (envelopes, payload) ->
+    unless payload instanceof Buffer
+      payload = JSON.stringify payload
+    @router.send [envelopes, payload]
+
+  _dealerTx: (envelopes, payload) ->
+    unless payload instanceof Buffer
+      payload = JSON.stringify payload
+    @dealer.send [envelopes, payload]
 
   _submitTasks: ->
     @store.keys (error, ids) =>
@@ -60,6 +67,5 @@ module.exports = class Broker
       if error?
         callback error
       else
-        payload = JSON.stringify id: task.id, request: task.request, data: task.data
-        @dealer.send [new Buffer(""), payload]
+        @_dealerTx new Buffer(""), id: task.id, request: task.request, data: task.data
         callback null
