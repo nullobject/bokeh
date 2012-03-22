@@ -47,9 +47,9 @@ module.exports = class Broker
 
   _submitTasks: ->
     @store.keys (error, ids) =>
-      throw error if error?
+      throw new Error(error) if error?
       async.forEachSeries ids, @_submitTask, (error) ->
-        throw error if error?
+        throw new Error(error) if error?
         console.log "Pending tasks flushed"
 
   _submitTask: (id, callback) =>

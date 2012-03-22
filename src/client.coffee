@@ -45,7 +45,7 @@ module.exports = class Client
       when "failed"
         @_failed handle, data
       else
-        throw "Unknown response '#{response}'"
+        throw new Error("Unknown response '#{response}'")
 
   _submitted: (handle) ->
     console.log "Task submitted: %s", handle.id
