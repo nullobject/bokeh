@@ -8,6 +8,10 @@ module.exports = class Broker
     @store  = new Riak @options.store.options
     @router = zmq.socket "router"
     @dealer = zmq.socket "dealer"
+    @queue = async.queue (task, callback) =>
+      @store.write task.id, task, callback
+    , 8
+
     @_bindRouter()
     @_bindDealer()
     @_submitTasks()
@@ -27,7 +31,7 @@ module.exports = class Broker
   _routerMessage: (envelopes..., payload) =>
     task = JSON.parse payload
 
-    @store.write task.id, task, (error) =>
+    @queue.push task, (error) =>
       if not error?
         @dealer.send [envelopes, payload]
 
@@ -41,7 +45,6 @@ module.exports = class Broker
 
   _dealerMessage: (envelopes..., payload) =>
     task = JSON.parse payload
-
     @store.delete task.id, (error) =>
       @router.send [envelopes, payload]
 
