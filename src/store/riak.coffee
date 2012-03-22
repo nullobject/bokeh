@@ -19,11 +19,17 @@ module.exports = class Riak
         callback null, data
 
   keys: (callback) ->
-    @client.keys @options.bucket, (error, data) ->
+    results = []
+
+    stream = @client.keys @options.bucket, keys: "stream", (error) ->
       if error?
         callback error
       else
-        callback null, data
+        callback null, results
+
+    stream.on "keys", (keys) -> results.push key for key in keys
+
+    stream.start()
 
   delete: (key, callback) ->
     @client.remove @options.bucket, key, (error) ->
