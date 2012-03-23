@@ -23,23 +23,21 @@ module.exports = class Worker
 
   _message: (payload) =>
     {id, request, data} = JSON.parse payload
-
     task = new @tasks[request] this
 
     console.log "Task started: %s", id
 
     @_runTask task, data, (error, data) =>
-      response = if error?
+      payload = if error?
         console.log "Task failed: %s (%s)", id, error
-        "failed"
+        JSON.stringify id: id, response: "failed", data: error.toString()
       else
         console.log "Task completed: %s", id
-        "completed"
-      payload = JSON.stringify id: id, response: response, data: data
+        JSON.stringify id: id, response: "completed", data: data
       @socket.send payload
 
   _runTask: (task, data, callback) ->
     try
       task.run data, callback
     catch error
-      callback error.toString()
+      callback error
