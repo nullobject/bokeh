@@ -35,7 +35,7 @@ module.exports = class Broker
 
     @queue.push task, (error) =>
       if error?
-        @_routerTx envelopes, id: task.id, response: "failed", data: error.toString()
+        @_routerTx envelopes, id: task.id, response: "failed", data: error
       else
         @_dealerTx envelopes, payload
         @_routerTx envelopes, id: task.id, response: "submitted"
@@ -57,9 +57,9 @@ module.exports = class Broker
 
   _submitTasks: ->
     @store.keys (error, ids) =>
-      throw new Error(error) if error?
+      throw error if error?
       async.forEachSeries ids, @_submitTask, (error) ->
-        throw new Error(error) if error?
+        throw error if error?
         console.log "Pending tasks flushed"
 
   _submitTask: (id, callback) =>
