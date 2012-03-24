@@ -5,18 +5,13 @@ module.exports = class Riak
     @client = riak.getClient @options
 
   write: (key, data, callback) ->
-    @client.save @options.bucket, key, data, (error) ->
-      if error?
-        callback error
-      else
-        callback null, this
+    @client.save @options.bucket, key, data, callback
 
   read: (key, callback) ->
-    @client.get @options.bucket, key, (error, data) ->
-      if error?
-        callback error
-      else
-        callback null, data
+    @client.get @options.bucket, key, callback
+
+  delete: (key, callback) ->
+    @client.remove @options.bucket, key, callback
 
   keys: (callback) ->
     results = []
@@ -30,10 +25,3 @@ module.exports = class Riak
     stream.on "keys", (keys) -> results.push key for key in keys
 
     stream.start()
-
-  delete: (key, callback) ->
-    @client.remove @options.bucket, key, (error) ->
-      if error?
-        callback error
-      else
-        callback null
