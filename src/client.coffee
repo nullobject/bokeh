@@ -7,7 +7,7 @@ class Handle extends EventEmitter
     @id = uuid()
 
 # A client submits tasks to a broker.
-module.exports = class Client
+module.exports = class Client extends EventEmitter
   constructor: (@options) ->
     @handles = {}
     @_connect()
@@ -49,9 +49,11 @@ module.exports = class Client
       handle.callback null, handle
       handle.callback = undefined
     handle.emit "submit"
+    @emit "submit", handle
 
   _completed: (handle, data) ->
     handle.emit "complete", data
+    @emit "complete", handle, data
     @_removeHandle handle
 
   _failed: (handle, data) ->
@@ -59,6 +61,7 @@ module.exports = class Client
       handle.callback data, handle
       handle.callback = undefined
     handle.emit "error", data unless handle.listeners("error").length is 0
+    @emit "error", handle, data unless @listeners("error").length is 0
     @_removeHandle handle
 
   _addHandle: (handle) ->
