@@ -1,4 +1,3 @@
-_   = require "underscore"
 zmq = require "zmq"
 
 # A worker processes tasks.
@@ -19,20 +18,15 @@ module.exports = class Worker
     @socket = zmq.socket "rep"
     @socket.on "message", @_message
     @socket.connect @options.dealer.endpoint
-    console.log "Worker connected to %s", @options.dealer.endpoint
 
   _message: (payload) =>
     {id, request, data} = JSON.parse payload
     task = new @tasks[request] this
 
-    console.log "Task started: %s", id
-
     @_runTask task, data, (error, data) =>
       payload = if error?
-        console.log "Task failed: %s (%s)", id, error
         JSON.stringify id: id, response: "failed", data: error.toString()
       else
-        console.log "Task completed: %s", id
         JSON.stringify id: id, response: "completed", data: data
       @socket.send payload
 

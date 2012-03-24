@@ -1,4 +1,3 @@
-_            = require "underscore"
 uuid         = require "node-uuid"
 zmq          = require "zmq"
 EventEmitter = require("events").EventEmitter
@@ -31,12 +30,10 @@ module.exports = class Client
     @socket = zmq.socket "dealer"
     @socket.on "message", @_message
     @socket.connect @options.router.endpoint
-    console.log "Client connected to %s", @options.router.endpoint
 
   _message: (envelopes..., payload) =>
     {id, response, data} = JSON.parse payload
     handle = @_getHandle id
-
     switch response
       when "submitted"
         @_submitted handle
@@ -48,23 +45,20 @@ module.exports = class Client
         throw new Error("Unknown response '#{response}'")
 
   _submitted: (handle) ->
-    console.log "Task submitted: %s", handle.id
     if handle.callback?
       handle.callback null, handle
       handle.callback = undefined
     handle.emit "submit"
 
   _completed: (handle, data) ->
-    console.log "Task completed: %s", handle.id
     handle.emit "complete", data
     @_removeHandle handle
 
   _failed: (handle, data) ->
-    console.log "Task failed: %s", handle.id
     if handle.callback?
       handle.callback data, handle
       handle.callback = undefined
-    handle.emit "error", data unless _(handle.listeners("error")).isEmpty()
+    handle.emit "error", data unless handle.listeners("error").length is 0
     @_removeHandle handle
 
   _addHandle: (handle) ->
