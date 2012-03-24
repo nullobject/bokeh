@@ -1,13 +1,13 @@
 {
-  "name":         "bokeh",
-  "version":      "0.2.1",
-  "description":  "A scalable background processing server.",
-  "author":       "Josh Bassett <josh.bassett@gmail.com>",
-  "homepage":     "https://github.com/nullobject/bokeh",
+  "name":        "bokeh",
+  "version":     "0.3.0",
+  "description": "A blazing-fast task queue built on Node.js and ZeroMQ.",
+  "author":      "Josh Bassett <josh.bassett@gmail.com>",
+  "homepage":    "https://github.com/nullobject/bokeh",
 
   "repository": {
     "type": "git",
-    "url": "git://github.com/nullobject/bokeh.git"
+    "url":  "git://github.com/nullobject/bokeh.git"
   },
 
   "engines":     {"node": "~0.6.0"},
@@ -15,19 +15,19 @@
   "main":        "./lib/index.js",
 
   "dependencies": {
-    "async":      "~0.1.0",
-    "log":        "~1.3.0",
-    "node-uuid":  "~1.3.0",
-    "zmq":        "~2.0.0"
+    "async":     "~0.1.0",
+    "log":       "~1.3.0",
+    "node-uuid": "~1.3.0",
+    "zmq":       "~2.0.0"
   },
 
   "devDependencies": {
-    "coffee-script":  "~1.2.0",
-    "glob":           "~3.1.0",
-    "mocha":          "~0.14.0",
-    "redis":          "~0.7.0",
-    "riak-js":        "~0.4.0",
-    "should":         "~0.6.0"
+    "coffee-script": "~1.2.0",
+    "glob":          "~3.1.0",
+    "mocha":         "~0.14.0",
+    "redis":         "~0.7.0",
+    "riak-js":       "~0.4.0",
+    "should":        "~0.6.0"
   },
 
   "optionalDependencies": {}
