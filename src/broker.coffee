@@ -2,7 +2,6 @@ async = require "async"
 fs    = require "fs"
 zmq   = require "zmq"
 Log   = require "log"
-Riak  = require "./store/riak"
 
 # A broker passes reqests/responses between clients/workers.
 module.exports = class Broker
@@ -22,9 +21,9 @@ module.exports = class Broker
       process.stdout
     @log = new Log level, stream
 
-  # TODO: Building the correct store.
   _initStore: (options) ->
-    @store = new Riak options.options
+    Store  = require "./stores/#{options.type}"
+    @store = new Store options.options
     @queue = async.queue (task, callback) =>
       @store.write task.id, task, callback
     , options.maxConnections or 1
