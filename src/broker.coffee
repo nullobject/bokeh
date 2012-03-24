@@ -17,7 +17,7 @@ module.exports = class Broker
   _initLog: (options) ->
     level = options?.level or "debug"
     stream = if options?.path?
-      fs.createWriteStream options.path
+      fs.createWriteStream options.path, flags: "a"
     else
       process.stdout
     @log = new Log level, stream
