@@ -2,6 +2,7 @@ async = require "async"
 fs    = require "fs"
 zmq   = require "zmq"
 Log   = require "log"
+Queue = require "./queue"
 
 # A broker passes reqests/responses between clients/workers.
 module.exports = class Broker
@@ -24,7 +25,7 @@ module.exports = class Broker
   _initStore: (options) ->
     Store  = require "./stores/#{options.type}"
     @store = new Store options.options
-    @queue = async.queue (task, callback) =>
+    @queue = new Queue (task, callback) =>
       @store.write task.id, task, callback
     , options.maxConnections or 1
 
