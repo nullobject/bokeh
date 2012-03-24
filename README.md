@@ -69,7 +69,6 @@ Bokeh supports pluggable data stores, the following data stores are supported:
 * In-memory
 * Redis
 * Riak
-* PostgreSQL
 
 ### Worker
 
