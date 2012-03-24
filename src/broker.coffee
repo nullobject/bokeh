@@ -27,7 +27,7 @@ module.exports = class Broker
     @store = new Riak options.options
     @queue = async.queue (task, callback) =>
       @store.write task.id, task, callback
-    , options.maxConnections or 8
+    , options.maxConnections or 1
 
   _initSockets: ->
     @router = zmq.socket "router"
