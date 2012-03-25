@@ -1,6 +1,6 @@
 # Bokeh
 
-Bokeh (pronounced boh-kay) is a simple, fast and scalable task queue built on [Node.js](http://nodejs.org) and [ZeroMQ](http://zeromq.org). It allows you to offload tasks from your main application process and distribute them among a pool of workers. Workers can be running on the same host as your application, or scaled out onto other machines for greater processing power.
+Bokeh (pronounced boh-kay) is a simple, scalable and blazing-fast task queue built on [Node.js](http://nodejs.org) and [ZeroMQ](http://zeromq.org). It allows you to offload tasks from your main application process and distribute them among a pool of workers. Workers can be running on the same host as your application, or scaled out onto multiple machines for greater processing power.
 
 When you want a worker to run a task, just submit it to the broker using the client API. A task is simply any class in your application which responds to the `run` method.
 
@@ -45,30 +45,25 @@ A task is a class which responds to the `run` method. A task is dealt to a worke
 Once the task has been completed, you must call the callback with any data you want to pass back to your application.
 
     class Reverse
-      run: (data, callback) ->
-        callback null, data.split("").reverse().join("")
+      run: (data, callback) -> callback null, data.split("").reverse().join("")
 
 ### Client
 
 The client is used by your application to submit tasks to the broker and monitor their progress.
 
     bokeh = require "bokeh"
-    handle = bokeh.getClient().submitTask "Reverse", timeout: 1000
-    handle.on "complete", (data) -> console.log data
-    handle.on "error", (data) -> console.error data
+    handle = bokeh.getClient().submitTask "Reverse"
+    handle.on "complete", (data) -> console.log "Task %s completed: %s", handle.id, data
+    handle.on "error", (error) -> console.error "Task %s failed: %s", handle.id, error
 
 ### Broker
 
-The broker is responsible for routing messages from clients, journaling them to a data store and dealing them to workers.
+The broker is responsible for routing messages from clients, persisting them to the data store and dealing them to workers.
 
     bokeh = require "bokeh"
     broker = new bokeh.Broker
 
-Bokeh supports pluggable data stores, the following data stores are supported:
-
-* In-memory
-* Redis
-* Riak
+Bokeh supports pluggable data stores for persisting tasks, currently in-memory, [Redis](http://redis.io/) and [Riak](http://basho.com/products/riak-overview/) are supported.
 
 ### Worker
 
