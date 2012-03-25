@@ -72,3 +72,7 @@ A worker is a process which receives tasks from a broker and executes them. You 
     bokeh = require "bokeh"
     worker = new bokeh.Worker
     worker.registerTask "Reverse", require("./tasks/reverse")
+
+## Example
+
+Check out the [example application](bokeh/tree/master/examples).
