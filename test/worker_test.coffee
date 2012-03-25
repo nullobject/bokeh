@@ -28,7 +28,7 @@ describe "Worker", ->
       worker.registerTask "reverse", Reverse
       worker.tasks.reverse.should.eql Reverse
 
-  it "should send the result when a task completes", (done) ->
+  it "should send a completed response when a task is completed", (done) ->
     worker.registerTask "reverse", Reverse
     socket.send JSON.stringify(id: 123, request: "reverse", data: "hello")
     socket.on "message", (payload) ->
@@ -38,7 +38,7 @@ describe "Worker", ->
       data.should.eql "olleh"
       done()
 
-  it "should send the error when a task fails", (done) ->
+  it "should send a failed response when a task failed", (done) ->
     worker.registerTask "reverse", Fail
     socket.send JSON.stringify(id: 123, request: "reverse", data: "hello")
     socket.on "message", (payload) ->
