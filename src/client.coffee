@@ -32,17 +32,17 @@ module.exports = class Client extends EventEmitter
     @socket.connect @options.router.endpoint
 
   _message: (envelopes..., payload) =>
-    {id, response, data} = JSON.parse payload
-    handle = @_getHandle id
-    switch response
+    task = JSON.parse payload
+    handle = @_getHandle task.id
+    switch task.response
       when "submitted"
         @_submitted handle
       when "completed"
-        @_completed handle, data
+        @_completed handle, task.data
       when "failed"
-        @_failed handle, data
+        @_failed handle, task.data
       else
-        throw new Error("Unknown response '#{response}'")
+        throw new Error("Unknown response '#{task.response}'")
 
   _submitted: (handle) ->
     if handle.callback?
