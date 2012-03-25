@@ -7,27 +7,28 @@ Queue = require "./queue"
 # A broker passes reqests/responses between clients/workers.
 module.exports = class Broker
   constructor: (@options={}) ->
-    @_initLog @options.log
-    @_initStore @options.store
+    @_initLog()
+    @_initStore()
     @_initSockets()
     @_bindRouter()
     @_bindDealer()
     @_submitTasks()
 
-  _initLog: (options) ->
-    level = options?.level or "info"
-    stream = if options?.path?
-      fs.createWriteStream options.path, flags: "a"
+  _initLog: ->
+    level = @options.log?.level or "info"
+    stream = if @options.log?.path?
+      fs.createWriteStream @options.log.path, flags: "a"
     else
       process.stdout
     @log = new Log level, stream
 
-  _initStore: (options) ->
-    Store  = require "./stores/#{options.type}"
-    @store = new Store options.options
+  _initStore: ->
+    type = @options.store?.type or "memory"
+    Store  = require "./stores/#{type}"
+    @store = new Store @options.store?.options
     @queue = new Queue (task, callback) =>
       @store.write task.id, task, callback
-    , options.maxConnections or 1
+    , @options.store?.maxConnections or 1
 
   _initSockets: ->
     @router = zmq.socket "router"
