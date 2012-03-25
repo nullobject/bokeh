@@ -16,7 +16,7 @@ describe "Client", ->
     socket.close()
 
   describe "#submitTask", ->
-    it "should submit a task", (done) ->
+    it "should emit a submit event when a task is submitted", (done) ->
       socket.on "message", (payload) ->
         task = JSON.parse payload
         payload = JSON.stringify id: task.id, response: "submitted"
@@ -25,18 +25,7 @@ describe "Client", ->
       handle.on "submit", ->
         done()
 
-    it "should submit a task with a callback", (done) ->
-      socket.on "message", (payload) ->
-        task = JSON.parse payload
-        payload = JSON.stringify id: task.id, response: "submitted"
-        socket.send payload
-      client.submitTask "reverse", "hello", (error, handle) ->
-        should.not.exist error
-        handle.name.should.eql "reverse"
-        handle.data.should.eql "hello"
-        done()
-
-    it "should submit a task and fail", (done) ->
+    it "should emit an error event when a task failed", (done) ->
       socket.on "message", (payload) ->
         task = JSON.parse payload
         payload = JSON.stringify id: task.id, response: "failed", data: "lorem"
@@ -46,17 +35,7 @@ describe "Client", ->
         data.should.eql "lorem"
         done()
 
-    it "should submit a task with a callback and fail", (done) ->
-      socket.on "message", (payload) ->
-        task = JSON.parse payload
-        payload = JSON.stringify id: task.id, response: "failed", data: "lorem"
-        socket.send payload
-      client.submitTask "reverse", "hello", (error, handle) ->
-        error.should.eql "lorem"
-        handle.on "error", (data) ->
-          done()
-
-    it "should complete a task", (done) ->
+    it "should emit a complete event when a task is completed", (done) ->
       socket.on "message", (payload) ->
         task = JSON.parse payload
         payload = JSON.stringify id: task.id, response: "completed", data: "elloh"
