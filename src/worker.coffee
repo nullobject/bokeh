@@ -2,7 +2,7 @@ zmq = require "zmq"
 
 # A worker processes tasks.
 module.exports = class Worker
-  constructor: (@options) ->
+  constructor: (@options={}) ->
     @tasks = {}
     @_connect()
 
@@ -15,9 +15,10 @@ module.exports = class Worker
     @tasks[name] = klass
 
   _connect: ->
+    endpoint = @options.dealer or "ipc:///tmp/bokeh-dealer"
     @socket = zmq.socket "rep"
     @socket.on "message", @_message
-    @socket.connect @options.dealer.endpoint
+    @socket.connect endpoint
 
   _message: (payload) =>
     task = JSON.parse payload

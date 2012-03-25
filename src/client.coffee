@@ -7,7 +7,7 @@ class Handle extends EventEmitter
 
 # A client submits tasks to a broker.
 module.exports = class Client
-  constructor: (@options) ->
+  constructor: (@options={}) ->
     @handles = {}
     @_connect()
 
@@ -24,9 +24,10 @@ module.exports = class Client
     handle
 
   _connect: ->
+    endpoint = @options.router or "ipc:///tmp/bokeh-router"
     @socket = zmq.socket "dealer"
     @socket.on "message", @_message
-    @socket.connect @options.router.endpoint
+    @socket.connect endpoint
 
   _message: (envelopes..., payload) =>
     task = JSON.parse payload

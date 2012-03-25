@@ -6,7 +6,7 @@ Queue = require "./queue"
 
 # A broker passes reqests/responses between clients/workers.
 module.exports = class Broker
-  constructor: (@options) ->
+  constructor: (@options={}) ->
     @_initLog @options.log
     @_initStore @options.store
     @_initSockets()
@@ -15,7 +15,7 @@ module.exports = class Broker
     @_submitTasks()
 
   _initLog: (options) ->
-    level = options?.level or "debug"
+    level = options?.level or "info"
     stream = if options?.path?
       fs.createWriteStream options.path, flags: "a"
     else
@@ -34,14 +34,16 @@ module.exports = class Broker
     @dealer = zmq.socket "dealer"
 
   _bindRouter: ->
+    endpoint = @options.router or "ipc:///tmp/bokeh-router"
     @router.on "message", @_routerRx
-    @router.bind @options.router.endpoint, =>
-      @log.info "Router listening on %s", @options.router.endpoint
+    @router.bind endpoint, =>
+      @log.info "Router listening on %s", endpoint
 
   _bindDealer: ->
+    endpoint = @options.dealer or "ipc:///tmp/bokeh-dealer"
     @dealer.on "message", @_dealerRx
-    @dealer.bind @options.dealer.endpoint, =>
-      @log.info "Dealer listening on %s", @options.dealer.endpoint
+    @dealer.bind endpoint, =>
+      @log.info "Dealer listening on %s", endpoint
 
   _routerRx: (envelopes..., payload) =>
     task = JSON.parse payload
