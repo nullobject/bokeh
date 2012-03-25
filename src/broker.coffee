@@ -35,23 +35,20 @@ module.exports = class Broker
 
   _bindRouter: ->
     @router.on "message", @_routerRx
-
     @router.bind @options.router.endpoint, =>
       @log.info "Router listening on %s", @options.router.endpoint
 
   _bindDealer: ->
     @dealer.on "message", @_dealerRx
-
     @dealer.bind @options.dealer.endpoint, =>
       @log.info "Dealer listening on %s", @options.dealer.endpoint
 
   _routerRx: (envelopes..., payload) =>
     task = JSON.parse payload
-
     @queue.push task, (error) =>
       if error?
         @_routerTx envelopes, id: task.id, response: "failed", data: error
-        @log.warning "Failed to write task: %s (%s)", task.id, error
+        @log.error "Failed to write task: %s (%s)", task.id, error
       else
         @_dealerTx envelopes, payload
         @_routerTx envelopes, id: task.id, response: "submitted"
@@ -59,13 +56,18 @@ module.exports = class Broker
 
   _dealerRx: (envelopes..., payload) =>
     task = JSON.parse payload
-
+    switch task.response
+      when "completed"
+        @log.info "Task completed: %s", task.id
+      when "failed"
+        @log.error "Task failed: %s (%s)", task.id, task.data
+      else
+        throw new Error("Unknown response '#{task.response}'")
     @store.delete task.id, (error) =>
       if error?
-        @log.info "Failed to delete task: %s (%s)", task.id, error
+        @log.error "Failed to delete task: %s (%s)", task.id, error
       else
         @_routerTx envelopes, payload
-        @log.info "Task %s: %s (%s)", task.response, task.id, task.data
 
   _routerTx: (envelopes, payload) ->
     unless payload instanceof Buffer
@@ -82,12 +84,12 @@ module.exports = class Broker
       throw error if error?
       async.forEachSeries ids, @_submitTask, (error) =>
         throw error if error?
-        @log.info "Pending tasks flushed"
 
   _submitTask: (id, callback) =>
     @store.read id, (error, task) =>
       if error?
         callback error
       else
-        @_dealerTx new Buffer(""), id: task.id, request: task.request, data: task.data
+        @_dealerTx new Buffer(""), task
+        @log.info "Task submitted: %s", task.id
         callback null
