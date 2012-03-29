@@ -1,6 +1,6 @@
 # Bokeh
 
-Bokeh (pronounced boh-kay) is a simple, scalable and blazing-fast task queue built on [Node.js](http://nodejs.org) and [ZeroMQ](http://zeromq.org). It allows you to offload tasks from your main application process and distribute them among a pool of workers. Workers can be running on the same host as your application, or scaled out onto multiple machines for greater processing power.
+bokeh (pronounced boh-kay) is a simple, scalable and blazing-fast task queue built on [Node.js](http://nodejs.org) and [ZeroMQ](http://zeromq.org). It allows you to offload tasks from your main application process and distribute them among a pool of workers. Workers can be running on the same host as your application, or scaled out onto multiple machines for greater processing power.
 
 When you want a worker to run a task, just submit it to the broker using the client API. A task is simply any class in your application which responds to the `run` method.
 
@@ -9,6 +9,8 @@ Bokeh consists of three components:
 1. The client library which your application uses to submit tasks to the broker.
 2. The broker process which manages the pool of workers.
 3. The worker processes which are responsible for running tasks.
+
+![](https://github.com/nullobject/bokeh/raw/master/doc/bokeh.png)
 
 ## Installation
 
