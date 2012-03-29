@@ -54,7 +54,7 @@ Once the task has been completed, you must call the callback with any data you w
 The client is used by your application to submit tasks to the broker and monitor their progress.
 
     bokeh = require "bokeh"
-    handle = bokeh.getClient().submitTask "Reverse"
+    handle = bokeh.getClient().submitTask "Reverse", "hello world"
     handle.on "complete", (data) -> console.log "Task %s completed: %s", handle.id, data
     handle.on "error", (error) -> console.error "Task %s failed: %s", handle.id, error
 
