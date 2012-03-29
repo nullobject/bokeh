@@ -10,7 +10,7 @@ Bokeh consists of three components:
 2. The broker process which manages the pool of workers.
 3. The worker processes which are responsible for running tasks.
 
-![](https://github.com/nullobject/bokeh/raw/master/doc/bokeh.png)
+![](bokeh/raw/master/doc/bokeh.png)
 
 ## Installation
 
@@ -78,3 +78,7 @@ A worker is a process which receives tasks from a broker and executes them. You 
 ## Example
 
 Check out the [example application](bokeh/tree/master/example).
+
+## License
+
+Bokeh is released under the [MIT license](bokeh/blob/master/LICENSE).
