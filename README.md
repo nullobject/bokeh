@@ -77,4 +77,4 @@ A worker is a process which receives tasks from a broker and executes them. You 
 
 ## Example
 
-Check out the [example application](bokeh/tree/master/examples).
+Check out the [example application](bokeh/tree/master/example).
