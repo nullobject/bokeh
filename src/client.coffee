@@ -3,7 +3,7 @@ zmq          = require "zmq"
 EventEmitter = require("events").EventEmitter
 
 class Handle extends EventEmitter
-  constructor: (@id) ->
+  constructor: (@id, @callback) ->
 
 # A client submits tasks to a broker.
 module.exports = class Client
@@ -17,8 +17,8 @@ module.exports = class Client
   # Submits a task with the given name and data.
   #
   # Returns a handle to the task.
-  submitTask: (name, data) ->
-    handle = @_addHandle()
+  submitTask: (name, data, callback) ->
+    handle = @_addHandle uuid(), callback
     payload = JSON.stringify id: handle.id, request: name, data: data
     @socket.send [new Buffer(""), payload]
     handle
@@ -47,17 +47,19 @@ module.exports = class Client
 
   _completed: (task) ->
     handle = @_getHandle task.id
+    handle.callback null, task.data if handle.callback?
     handle.emit "complete", task.data
     @_removeHandle handle
 
   _failed: (task) ->
     handle = @_getHandle task.id
+    handle.callback task.data if handle.callback?
     handle.emit "error", task.data unless handle.listeners("error").length is 0
     @_removeHandle handle
 
-  _addHandle: ->
-    handle = new Handle uuid()
-    @handles[handle.id] = handle
+  _addHandle: (id, callback) ->
+    handle = new Handle id, callback
+    @handles[id] = handle
     handle
 
   _removeHandle: (handle) ->
