@@ -22,26 +22,6 @@ describe "Client", ->
       handle.on "submit", ->
         done()
 
-    it "should emit an error event when a task failed", (done) ->
-      @socket.on "message", (payload) =>
-        task = JSON.parse payload
-        payload = JSON.stringify id: task.id, response: "failed", data: "lorem"
-        @socket.send payload
-      handle = @client.submitTask "reverse", "hello"
-      handle.on "error", (data) ->
-        data.should.eql "lorem"
-        done()
-
-    it "should callback when a task failed", (done) ->
-      @socket.on "message", (payload) =>
-        task = JSON.parse payload
-        payload = JSON.stringify id: task.id, response: "failed", data: "lorem"
-        @socket.send payload
-      @client.submitTask "reverse", "hello", (error, data) ->
-        error.should.eql "lorem"
-        should.not.exist data
-        done()
-
     it "should emit a complete event when a task is completed", (done) ->
       @socket.on "message", (payload) =>
         task = JSON.parse payload
@@ -60,4 +40,24 @@ describe "Client", ->
       @client.submitTask "reverse", "hello", (error, data) ->
         should.not.exist error
         data.should.eql "elloh"
+        done()
+
+    it "should emit an error event when a task failed", (done) ->
+      @socket.on "message", (payload) =>
+        task = JSON.parse payload
+        payload = JSON.stringify id: task.id, response: "failed", data: "lorem"
+        @socket.send payload
+      handle = @client.submitTask "reverse", "hello"
+      handle.on "error", (data) ->
+        data.should.eql "lorem"
+        done()
+
+    it "should callback when a task failed", (done) ->
+      @socket.on "message", (payload) =>
+        task = JSON.parse payload
+        payload = JSON.stringify id: task.id, response: "failed", data: "lorem"
+        @socket.send payload
+      @client.submitTask "reverse", "hello", (error, data) ->
+        error.should.eql "lorem"
+        should.not.exist data
         done()

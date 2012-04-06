@@ -57,6 +57,8 @@ module.exports = class Client
     handle.emit "error", task.data unless handle.listeners("error").length is 0
     @_removeHandle handle
 
+  _getHandle: (id) -> @handles[id]
+
   _addHandle: (id, callback) ->
     handle = new Handle id, callback
     @handles[id] = handle
@@ -64,5 +66,3 @@ module.exports = class Client
 
   _removeHandle: (handle) ->
     delete @handles[handle.id]
-
-  _getHandle: (id) -> @handles[id]
