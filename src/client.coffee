@@ -47,13 +47,13 @@ module.exports = class Client
 
   _completed: (task) ->
     handle = @_getHandle task.id
-    handle.callback null, task.data if handle.callback?
+    handle.callback? null, task.data
     handle.emit "complete", task.data
     @_removeHandle handle
 
   _failed: (task) ->
     handle = @_getHandle task.id
-    handle.callback task.data if handle.callback?
+    handle.callback? task.data
     handle.emit "error", task.data unless handle.listeners("error").length is 0
     @_removeHandle handle
 
