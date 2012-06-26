@@ -1,4 +1,6 @@
 --colors
+--compilers coffee:coffee-script
+--ignore-leaks
 --reporter spec
 --require should
 --ui bdd
