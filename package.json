@@ -1,6 +1,6 @@
 {
   "name": "bokeh",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A blazing-fast task queue built on Node.js and ZeroMQ.",
   "author": "Josh Bassett <josh.bassett@gmail.com>",
   "homepage": "https://github.com/nullobject/bokeh",
