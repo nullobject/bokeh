@@ -1,4 +1,4 @@
-bokeh = require "../lib"
+bokeh = require "../src"
 
 # This task reverses the given string, failing randomly.
 class Reverse

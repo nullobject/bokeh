@@ -1,4 +1,4 @@
-bokeh = require "../lib"
+bokeh = require "../src"
 client = new bokeh.Client
 
 for i in [0...1000]

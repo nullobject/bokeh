@@ -1,4 +1,4 @@
-bokeh = require "../lib"
+bokeh = require "../src"
 
 broker = new bokeh.Broker
   log:
