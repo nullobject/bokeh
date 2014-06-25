@@ -18,18 +18,18 @@
   },
   "main": "./lib/index.js",
   "dependencies": {
-    "async": "0.1.x",
-    "log": "1.3.x",
-    "node-uuid": "1.3.x",
-    "zmq": "2.0.x"
+    "async": "^0.9.0",
+    "log": "^1.4.0",
+    "node-uuid": "^1.4.1",
+    "zmq": "^2.7.0"
   },
   "devDependencies": {
-    "coffee-script": "1.3.x",
-    "glob": "3.1.x",
-    "mocha": "1.3.x",
-    "redis": "0.7.x",
-    "riak-js": "0.4.x",
-    "should": "0.6.x"
+    "coffee-script": "^1.7.1",
+    "glob": "^4.0.2",
+    "mocha": "^1.20.1",
+    "redis": "^0.10.3",
+    "riak-js": "^0.10.2",
+    "should": "^4.0.4"
   },
   "scripts": {
     "test": "mocha"
