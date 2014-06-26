@@ -1,5 +1,3 @@
-should = require "should"
-zmq    = require "zmq"
 Client = require "../src/client"
 
 describe "Client", ->
@@ -29,7 +27,7 @@ describe "Client", ->
         @socket.send payload
       handle = @client.submitTask "reverse", "hello"
       handle.on "complete", (data) ->
-        data.should.eql "elloh"
+        expect(data).to.eql "elloh"
         done()
 
     it "should callback when a task is completed", (done) ->
@@ -38,8 +36,8 @@ describe "Client", ->
         payload = JSON.stringify id: task.id, response: "completed", data: "elloh"
         @socket.send payload
       @client.submitTask "reverse", "hello", (error, data) ->
-        should.not.exist error
-        data.should.eql "elloh"
+        expect(error).to.not.exist
+        expect(data).to.eql "elloh"
         done()
 
     it "should emit an error event when a task failed", (done) ->
@@ -49,7 +47,7 @@ describe "Client", ->
         @socket.send payload
       handle = @client.submitTask "reverse", "hello"
       handle.on "error", (data) ->
-        data.should.eql "lorem"
+        expect(data).to.eql "lorem"
         done()
 
     it "should callback when a task failed", (done) ->
@@ -58,6 +56,6 @@ describe "Client", ->
         payload = JSON.stringify id: task.id, response: "failed", data: "lorem"
         @socket.send payload
       @client.submitTask "reverse", "hello", (error, data) ->
-        error.should.eql "lorem"
-        should.not.exist data
+        expect(error).to.eql "lorem"
+        expect(data).to.not.exist
         done()

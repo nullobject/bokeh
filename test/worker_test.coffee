@@ -1,5 +1,3 @@
-should = require "should"
-zmq    = require "zmq"
 Worker = require "../src/worker"
 
 class Reverse
@@ -23,16 +21,16 @@ describe "Worker", ->
   describe "#registerTask", ->
     it "should register a task", ->
       @worker.registerTask "reverse", Reverse
-      @worker.tasks.reverse.should.eql Reverse
+      expect(@worker.tasks.reverse).to.eql Reverse
 
   it "should send a completed response when a task is completed", (done) ->
     @worker.registerTask "reverse", Reverse
     @socket.send JSON.stringify(id: 123, request: "reverse", data: "hello")
     @socket.on "message", (payload) ->
       {id, response, data} = JSON.parse payload
-      id.should.eql 123
-      response.should.eql "completed"
-      data.should.eql "olleh"
+      expect(id).to.eql 123
+      expect(response).to.eql "completed"
+      expect(data).to.eql "olleh"
       done()
 
   it "should send a failed response when a task failed", (done) ->
@@ -40,7 +38,7 @@ describe "Worker", ->
     @socket.send JSON.stringify(id: 123, request: "reverse", data: "hello")
     @socket.on "message", (payload) ->
       {id, response, data} = JSON.parse payload
-      id.should.eql 123
-      response.should.eql "failed"
-      data.should.eql "Error: oh noes"
+      expect(id).to.eql 123
+      expect(response).to.eql "failed"
+      expect(data).to.eql "Error: oh noes"
       done()

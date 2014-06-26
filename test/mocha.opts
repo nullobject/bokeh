@@ -1,5 +1,3 @@
---colors
 --compilers coffee:coffee-script/register
 --reporter spec
---require should
---ui bdd
+--require ./test/support/helper.coffee
