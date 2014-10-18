@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git://github.com/nullobject/bokeh.git"
   },
-  "main": "./lib/index.js",
+  "main": "./dist/index.js",
   "files": [
     "dist"
   ],
