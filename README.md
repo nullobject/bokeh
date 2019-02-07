@@ -81,4 +81,4 @@ Check out the [example application](bokeh/tree/master/example).
 
 ## License
 
-Bokeh is released under the [MIT license](bokeh/blob/master/LICENSE).
+Bokeh is released under the [MIT license](bokeh/blob/master/LICENCE).
