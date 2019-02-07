@@ -10,7 +10,7 @@ Bokeh consists of three components:
 2. The broker process which manages the pool of workers.
 3. The worker processes which are responsible for running tasks.
 
-![](bokeh/raw/master/doc/bokeh.png)
+![](bokeh/raw/master/logo.png)
 
 ## Installation
 
