@@ -3,37 +3,35 @@
   "version": "0.5.1",
   "description": "A blazing-fast task queue built on Node.js and ZeroMQ.",
   "homepage": "https://github.com/nullobject/bokeh",
-  "author": "Josh Bassett <josh.bassett@gmail.com> (http://joshbassett.info)",
-  "license": "BSD",
+  "author": "Josh Bassett <josh.bassett@gmail.com> (https://joshbassett.info)",
+  "license": "MIT",
   "keywords": [
     "zeromq",
     "message",
     "queue"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nullobject/bokeh.git"
-  },
   "main": "./dist/index.js",
   "files": [
     "dist"
   ],
-  "scripts": {
-    "test": "make test"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nullobject/bokeh.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nullobject/bokeh/issues"
+  },
+  "standard": {
+    "env": "jest"
   },
   "dependencies": {
-    "async": "^0.9.0",
-    "log": "^1.4.0",
-    "node-uuid": "^1.4.1",
-    "zmq": "^2.7.0"
+    "async": "^2.6.1",
+    "uuid": "^3.3.2",
+    "zeromq": "^5.1.0"
   },
   "devDependencies": {
-    "chai": "^1.9.1",
-    "coffee-script": "^1.7.1",
-    "glob": "^4.0.2",
-    "jshint": "^2.5.6",
-    "mocha": "^1.21.4",
-    "redis": "^0.10.3",
-    "riak-js": "^0.10.2"
+    "jest": "^24.0.0",
+    "redis": "^2.8.0",
+    "standard": "^12.0.1"
   }
 }

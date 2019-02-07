@@ -1,3 +1,0 @@
-broker: coffee broker.coffee
-worker: coffee worker.coffee
-client: coffee client.coffee
