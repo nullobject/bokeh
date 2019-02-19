@@ -1,9 +1,9 @@
 const async = require('async')
 const zmq = require('zeromq')
 
-const Memory = require('./stores/memory')
+const Memory = require('./stores/Memory')
 const Queue = require('./Queue')
-const Redis = require('./stores/redis')
+const Redis = require('./stores/Redis')
 
 // A broker passes reqests/responses between clients/workers.
 const Broker = function (options = {}) {
