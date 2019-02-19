@@ -1,13 +1,12 @@
-.PHONY: clean lint node_modules publish-npm test
-
-node_modules:
-	@npm install
+.PHONY: clean lint publish-npm release test
 
 test:
 	@npx jest
 
 lint:
 	@npx standard "src/**/*.js"
+
+release: publish-npm
 
 publish-npm:
 	@npm publish
