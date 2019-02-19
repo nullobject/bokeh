@@ -1,3 +1,3 @@
-export { default as Broker } from './Broker'
-export { default as Client } from './Client'
-export { default as Worker } from './Worker'
+module.exports.Broker = require('./Broker')
+module.exports.Client = require('./Client')
+module.exports.Worker = require('./Worker')
