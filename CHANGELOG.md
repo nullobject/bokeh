@@ -1,3 +1,7 @@
+## Unreleased
+
+* Fix issue loading correct store
+
 ## 1.0.1 (2019-02-19)
 
 * Fix exports

@@ -1,7 +1,9 @@
 const async = require('async')
 const zmq = require('zeromq')
 
+const Memory = require('./stores/memory')
 const Queue = require('./Queue')
+const Redis = require('./stores/redis')
 
 // A broker passes reqests/responses between clients/workers.
 const Broker = function (options = {}) {
@@ -18,12 +20,19 @@ const Broker = function (options = {}) {
 
 Object.assign(Broker.prototype, {
   _initStore () {
-    const type = (this.options.store ? this.options.store.type : undefined) || 'memory'
-    const Store = require(`./stores/${type}`)
-    this.store = new Store(this.options.store ? this.options.store.options : undefined)
+    const type = this.options.store && this.options.store.type
+    let Store
+
+    if (type === 'redis') {
+      Store = Redis
+    } else {
+      Store = Memory
+    }
+
+    this.store = new Store(this.options.store && this.options.store.options)
     this.queue = new Queue((task, callback) => {
       this.store.write(task.id, task, callback)
-    }, (this.options.store ? this.options.store.maxConnections : undefined) || 1)
+    }, (this.options.store && this.options.store.maxConnections) || 1)
   },
 
   _initSockets () {
