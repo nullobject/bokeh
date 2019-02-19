@@ -1,11 +1,14 @@
-v0.5.1 / 2014-10-18
-===================
+## 1.0.0 (2019-02-19)
 
-  * Fix main file in package.
+* Decaffeinate
+* Update dependencies
 
-v0.5.0 / 2014-10-18
-===================
+## 0.5.1 (2014-10-18)
 
-  * Fix npm package.
-  * Refactor to a makefile.
-  * Fix an issue in the client example logging.
+* Fix main file in package
+
+## 0.5.0 (2014-10-18)
+
+* Fix npm package
+* Refactor to a makefile
+* Fix an issue in the client example logging
