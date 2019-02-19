@@ -1,4 +1,4 @@
-const Worker = require('../src/Worker')
+const Worker = require('bokeh').Worker
 
 // This task reverses the given string, failing randomly.
 function reverse (data, callback) {
@@ -9,5 +9,5 @@ function reverse (data, callback) {
   }
 }
 
-const worker = new Worker()
+const worker = new Worker({ dealer: 'tcp://broker:6001' })
 worker.registerTask('reverse', reverse)

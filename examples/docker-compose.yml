@@ -1,0 +1,20 @@
+version: "3.4"
+
+services:
+  broker:
+    build: .
+    command: node broker.js
+    volumes:
+      - ./broker.js:/app/broker.js
+
+  worker:
+    build: .
+    command: node worker.js
+    volumes:
+      - ./worker.js:/app/worker.js
+
+  client:
+    build: .
+    command: node client.js
+    volumes:
+      - ./client.js:/app/client.js

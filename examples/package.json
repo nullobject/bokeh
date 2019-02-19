@@ -1,0 +1,9 @@
+{
+  "name": "examples",
+  "description": "The example application comprises of a client, broker and worker processes. The client submits multiple tasks to the broker which then deals them to the pool of workers.",
+  "private": true,
+  "dependencies": {
+    "bokeh": "^1.0.3",
+    "redis": "^2.8.0"
+  }
+}

@@ -7,8 +7,8 @@ const Redis = require('./stores/Redis')
 
 // A broker passes reqests/responses between clients/workers.
 const Broker = function (options = {}) {
-  this._routerRx = this._routerRx.bind(this)
-  this._dealerRx = this._dealerRx.bind(this)
+  this._clientRx = this._clientRx.bind(this)
+  this._workerRx = this._workerRx.bind(this)
   this._submitTask = this._submitTask.bind(this)
   this.options = options
   this._initStore()
@@ -42,7 +42,7 @@ Object.assign(Broker.prototype, {
 
   _bindRouter () {
     const endpoint = this.options.router || 'ipc:///tmp/bokeh-router'
-    this.router.on('message', this._routerRx)
+    this.router.on('message', this._clientRx)
     this.router.bind(endpoint, function () {
       console.log('Router listening on %s', endpoint)
     })
@@ -50,13 +50,13 @@ Object.assign(Broker.prototype, {
 
   _bindDealer () {
     const endpoint = this.options.dealer || 'ipc:///tmp/bokeh-dealer'
-    this.dealer.on('message', this._dealerRx)
+    this.dealer.on('message', this._workerRx)
     this.dealer.bind(endpoint, function () {
       console.log('Dealer listening on %s', endpoint)
     })
   },
 
-  _routerRx (...args) {
+  _clientRx (...args) {
     const adjustedLength = Math.max(args.length, 1)
     const envelopes = args.slice(0, adjustedLength - 1)
     const payload = args[adjustedLength - 1]
@@ -64,24 +64,24 @@ Object.assign(Broker.prototype, {
 
     this.queue.push(task, error => {
       if (error) {
-        this._routerTx(envelopes, { id: task.id, response: 'failed', data: error })
+        this._clientTx(envelopes, { id: task.id, response: 'failed', data: error })
         console.error('Failed to write task: %s (%s)', task.id, error)
       } else {
-        this._dealerTx(envelopes, payload)
-        this._routerTx(envelopes, { id: task.id, response: 'submitted' })
+        this._workerTx(envelopes, payload)
+        this._clientTx(envelopes, { id: task.id, response: 'submitted' })
         console.log('Task submitted: %s', task.id)
       }
     })
   },
 
-  _routerTx (envelopes, payload) {
+  _clientTx (envelopes, payload) {
     if (!(payload instanceof Buffer)) {
       payload = JSON.stringify(payload)
     }
     this.router.send(envelopes.concat(payload))
   },
 
-  _dealerRx (...args) {
+  _workerRx (...args) {
     const adjustedLength = Math.max(args.length, 1)
     const envelopes = args.slice(0, adjustedLength - 1)
     const payload = args[adjustedLength - 1]
@@ -97,16 +97,17 @@ Object.assign(Broker.prototype, {
       default:
         throw new Error(`Unknown response '${task.response}'`)
     }
+
     this.store.delete(task.id, error => {
       if (error) {
         console.error('Failed to delete task: %s (%s)', task.id, error)
       } else {
-        this._routerTx(envelopes, payload)
+        this._clientTx(envelopes, payload)
       }
     })
   },
 
-  _dealerTx (envelopes, payload) {
+  _workerTx (envelopes, payload) {
     if (!(payload instanceof Buffer)) {
       payload = JSON.stringify(payload)
     }
@@ -127,7 +128,7 @@ Object.assign(Broker.prototype, {
       if (error) {
         callback(error)
       } else {
-        this._dealerTx([Buffer.alloc(0)], task)
+        this._workerTx([Buffer.alloc(0)], task)
         console.log('Task submitted: %s', task.id)
         callback(null)
       }
