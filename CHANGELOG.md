@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.3 (2019-02-19)
 
 * Fix issue loading stores on linux
 
