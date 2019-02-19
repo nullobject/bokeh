@@ -1,5 +1,7 @@
 # Bokeh
 
+[![Build Status](https://travis-ci.com/nullobject/bokeh.svg?branch=master)](https://travis-ci.com/nullobject/bokeh)
+
 bokeh (pronounced boh-kay) is a simple, scalable and blazing-fast task queue built on [Node.js](http://nodejs.org) and [ZeroMQ](http://zeromq.org). It allows you to offload tasks from your main application process and distribute them among a pool of workers. Workers can be running on the same host as your application, or scaled out onto multiple machines for greater processing power.
 
 When you want a worker to run a task, just submit it to the broker using the client API. A task is simply any class in your application which responds to the `run` method.
@@ -10,7 +12,7 @@ Bokeh consists of three components:
 2. The broker process which manages the pool of workers.
 3. The worker processes which are responsible for running tasks.
 
-![](bokeh/raw/master/logo.png)
+![](https://raw.githubusercontent.com/nullobject/bokeh/master/logo.png)
 
 ## Installation
 
@@ -75,10 +77,6 @@ A worker is a process which receives tasks from a broker and executes them. You 
     worker = new bokeh.Worker
     worker.registerTask "Reverse", require("./tasks/reverse")
 
-## Example
-
-Check out the [example application](bokeh/tree/master/example).
-
 ## License
 
-Bokeh is released under the [MIT license](bokeh/blob/master/LICENCE).
+Bokeh is released under the [MIT license](https://github.com/nullobject/bokeh/blob/master/LICENCE.md).
