@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.2 (2019-02-19)
 
 * Fix issue loading correct store
 
